@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PolygonView">
+        <attr name="textColor" format="color" />
+        <attr name="edgeColor" format="color" />
+        <attr name="areaColor" format="color" />
+        <attr name="loopCount" format="integer" />
+        <attr name="edgeCount" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="FoldFabGroup">
+        <attr name="maxDistance" format="integer"/>
+        <attr name="maxAngle" format="integer"/>
+        <attr name="scale" format="float"/>
+        <attr name="isNeedDamperScreen" format="boolean"/>
+        <attr name="DamperScreenColor" format="color"/>
+        <attr name="fabPadding" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="HintEditView">
+        <attr name="hintText" format="string"/>
+        <attr name="textInputType" format="integer" />
+        <attr name="editAble" format="boolean"/>
+    </declare-styleable>
+</resources>

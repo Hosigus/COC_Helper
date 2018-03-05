@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_8">
+
+        <ImageView
+            android:id="@+id/iv_dai_headpic"
+            android:layout_width="@dimen/dp_98"
+            android:layout_height="@dimen/dp_98"
+            android:src="@drawable/ic_default_head" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintText="姓名："/>
+
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textInputType="@integer/input_number"
+                app:hintText="年龄："/>
+
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_sex"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editAble="false"
+                app:hintText="性别："/>
+
+            <LinearLayout
+                android:id="@+id/ll_dai_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:layout_marginEnd="@dimen/dp_8"
+                    android:layout_gravity="center"
+                    android:text="性别："/>
+                <Spinner
+                    android:id="@+id/s_dai_sex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/sex" />
+            </LinearLayout>
+
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_decade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintText="年代："/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_dai_profession_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        android:textSize="@dimen/sp_12"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:textColor="@color/gray_little_light"
+        tools:text="这是一段对于选择的职业的说明"/>
+    <LinearLayout
+        android:id="@+id/ll_dai_pro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_gravity="center"
+            android:text="职业："/>
+        <Spinner
+            android:id="@+id/s_dai_profession"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <com.hosigus.coc_helper.views.HintEditView
+        android:id="@+id/hev_dai_pro"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:editAble="false"
+        app:hintText="职业："/>
+
+    <com.hosigus.coc_helper.views.HintEditView
+        android:id="@+id/hev_dai_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hintText="住址："/>
+
+    <com.hosigus.coc_helper.views.HintEditView
+        android:id="@+id/hev_dai_homeland"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_8"
+        app:hintText="家乡："/>
+    <Button
+        android:id="@+id/btn_dai_confirm"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:background="@drawable/shape_radius_dash"
+        android:layout_width="@dimen/dp_64"
+        android:layout_height="@dimen/dp_32"
+        android:text="@string/confirm"/>
+</LinearLayout>

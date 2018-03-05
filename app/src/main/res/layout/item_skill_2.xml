@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/ll_item_skill"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="@dimen/dp_4"
+    android:layout_height="wrap_content">
+    <TextView android:id="@+id/tv_item_skill_name" android:layout_weight="3" style="@style/LL_avg" />
+    <TextView android:id="@+id/tv_item_skill_start" style="@style/LL_avg"/>
+    <TextView android:id="@+id/tv_item_skill_ispro" style="@style/LL_avg"/>
+</LinearLayout>

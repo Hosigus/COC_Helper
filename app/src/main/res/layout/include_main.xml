@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/tb_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_56"
+                app:titleTextColor="@color/white"
+                android:title="@string/app_name"
+                app:theme="@style/OverflowMenuTheme"
+                android:layout_above="@color/blue"
+                app:layout_scrollFlags="scroll|enterAlways" />
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_main"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+        <com.hosigus.coc_helper.views.FoldFabGroup
+            android:id="@+id/ffg_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isNeedDamperScreen="true">
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_fab_game"
+                app:backgroundTint="@drawable/fab_ripple" />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_fab_pc"
+                app:backgroundTint="@drawable/fab_ripple" />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_fab_kp"
+                app:backgroundTint="@drawable/fab_ripple" />
+        </com.hosigus.coc_helper.views.FoldFabGroup>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/bottom_shadow"
+        android:id="@+id/view_shadow" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bnv_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconTint="@drawable/bottom_navigation_selector"
+        app:itemTextColor="@drawable/bottom_navigation_selector"
+        app:menu="@menu/bottom_navigation_main" />
+</LinearLayout>
+

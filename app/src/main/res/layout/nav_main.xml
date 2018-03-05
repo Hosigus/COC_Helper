@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:focusable="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/side_nav_bar"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_16"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <Button
+            android:id="@+id/btn_choose_yi"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/ic_btn_change_yummy"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/nav_head_text"
+            android:textSize="@dimen/sp_24" />
+        <ImageView
+            android:id="@+id/iv_nav_head"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_above="@+id/tv_nav_name"
+            android:src="@drawable/ic_default_head"/>
+
+        <TextView
+            android:id="@+id/tv_nav_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_8"
+            android:layout_above="@+id/tv_nav_detail"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/tv_nav_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <com.hosigus.coc_helper.views.PolygonView
+        android:id="@+id/pv_nav_investigator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:edgeCount="9"
+        app:loopCount="4" />
+
+
+</LinearLayout>

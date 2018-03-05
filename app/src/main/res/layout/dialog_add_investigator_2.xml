@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:text="@string/hint_arr"/>
+        <Button
+            android:id="@+id/btn_dai_dice"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_margin="@dimen/dp_8"
+            android:layout_gravity="end"
+            android:background="@drawable/ic_btn_dice"/>
+    </FrameLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+        <TableRow>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_str"
+                app:textInputType="@integer/input_number"
+                app:hintText="力量:"/>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_dex"
+                app:textInputType="@integer/input_number"
+                app:hintText="敏捷:"/>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_con"
+                app:textInputType="@integer/input_number"
+                app:hintText="体质:"/>
+        </TableRow>
+        <TableRow>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_app"
+                app:textInputType="@integer/input_number"
+                app:hintText="外貌:"/>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_pow"
+                app:textInputType="@integer/input_number"
+                app:hintText="意志:"/>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_int"
+                app:textInputType="@integer/input_number"
+                app:hintText="智力:"/>
+        </TableRow>
+        <TableRow>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_siz"
+                app:textInputType="@integer/input_number"
+                app:hintText="体型:"/>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_edu"
+                app:textInputType="@integer/input_number"
+                app:hintText="教育:"/>
+            <com.hosigus.coc_helper.views.HintEditView
+                android:id="@+id/hev_dai_luck"
+                app:textInputType="@integer/input_number"
+                app:hintText="幸运:"/>
+        </TableRow>
+    </TableLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.hosigus.coc_helper.views.PolygonView
+            android:id="@+id/pv_dai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:edgeCount="9"
+            app:loopCount="4" />
+
+        <View
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/bottom_shadow"
+            android:id="@+id/view_shadow" />
+
+        <Button
+            android:id="@+id/btn_dai_refresh"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_8"
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_32"
+            android:layout_gravity="end"
+            android:background="@drawable/ic_btn_refresh" />
+
+        <Button
+            android:id="@+id/btn_dai_back"
+            android:layout_width="@dimen/dp_64"
+            android:layout_height="@dimen/dp_32"
+            android:layout_margin="@dimen/dp_8"
+            android:background="@drawable/shape_radius_dash"
+            android:text="@string/back"
+            android:layout_gravity="start|bottom" />
+        <Button
+            android:id="@+id/btn_dai_confirm2"
+            android:layout_width="@dimen/dp_64"
+            android:layout_height="@dimen/dp_32"
+            android:layout_margin="@dimen/dp_8"
+            android:background="@drawable/shape_radius_dash"
+            android:text="@string/confirm"
+            android:layout_gravity="end|bottom" />
+
+    </FrameLayout>
+</LinearLayout>

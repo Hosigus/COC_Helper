@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="400dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <EditText android:id="@+id/tv_item_skill_name" style="@style/LL_avg" android:enabled="false" android:background="@null"/>
+    <TextView android:id="@+id/tv_item_skill_start" style="@style/LL_avg"/>
+    <EditText android:id="@+id/et_item_skill_pro" style="@style/LL_avg" android:inputType="number"/>
+    <EditText android:id="@+id/et_item_skill_int" style="@style/LL_avg" android:inputType="number"/>
+    <TextView android:id="@+id/tv_item_skill_sum" style="@style/LL_avg"/>
+</LinearLayout>

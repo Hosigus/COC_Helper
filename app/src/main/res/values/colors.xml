@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue">#3F51B5</color>
+    <color name="red">#ff000d</color>
+    <color name="blue_dark">#303F9F</color>
+    <color name="pink">#FF4081</color>
+    <color name="transparent">#0000</color>
+    <color name="black">#000</color>
+    <color name="white">#fff</color>
+    <color name="gray">#999</color>
+    <color name="gray_little_light">#cfcfcf</color>
+    <color name="gray_light">#dadada</color>
+
+    <color name="menu_unSelect">#757575</color>
+    <color name="menu_Select">@color/blue_dark</color>
+
+</resources>
