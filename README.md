@@ -1,10 +1,10 @@
-#COC跑团助手
+#<h1>COC跑团助手</h1>
 
-![COC跑团助手](readmeFiles\icon.png)
+![COC跑团助手](https://github.com/Hosigus/COC_Helper/blob/master/readmeFiles/icon.png)
 
 
 
-> 本文更新于2018.3.4。[最新版]()为alpha 1.2
+> 本文更新于2018.3.4。[最新版](https://github.com/Hosigus/COC_Helper/blob/master/app/release/COC%E8%B7%91%E5%9B%A2%E5%8A%A9%E6%89%8B.alpha1.2.apk)为alpha 1.2
 
 ## 应用简介
 
@@ -20,7 +20,7 @@
 
 
 
-![车卡](readmeFiles\creatI.gif)
+![车卡](https://github.com/Hosigus/COC_Helper/blob/master/readmeFiles/creatI.gif)
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-![车卡](readmeFiles\showI.gif)
+![车卡](https://github.com/Hosigus/COC_Helper/blob/master/readmeFiles/showI.gif)
 
 
 
@@ -36,7 +36,7 @@
 
 
 
-![游戏](readmeFiles\game.gif)
+![游戏](https://github.com/Hosigus/COC_Helper/blob/master/readmeFiles/game.gif)
 
 
 
@@ -47,4 +47,3 @@
   3. 极速模组制作
   4. 段子带图片
   5. 人物卡共享(可包括头像)
-
