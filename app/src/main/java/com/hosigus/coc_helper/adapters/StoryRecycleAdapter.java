@@ -71,7 +71,7 @@ public class StoryRecycleAdapter extends RecyclerView.Adapter<StoryRecycleAdapte
         holder.setStory(storyList.get(position));
         holder.v.setOnClickListener((v1 -> mCallBack.onShowStory(storyList.get(position),isShowLike,position)));
         int count = getItemCount();
-        if (count > Settings.storyNumInPage && position==count-1)
+        if (count >= Settings.storyNumInPage && position==count-1)
             mCallBack.onLoad();
     }
 
