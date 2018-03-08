@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity{
                     e.printStackTrace();
                     return;
                 }
-                if (version.equals(finalVersionName)) {
+                if (!version.equals(finalVersionName)) {
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("检测到有新版本,是否立即下载?")
                             .setPositiveButton("立即下载", (d, w) -> {
