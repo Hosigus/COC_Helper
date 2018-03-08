@@ -55,8 +55,12 @@ public class HintEditView extends LinearLayout{
     public void setEditText(String text) {
         editView.setText(text);
     }
-    public void setOnChangeListenter(TextView.OnEditorActionListener listenter){
-        editView.setOnEditorActionListener(listenter);
+    public void setOnChangeListener(TextView.OnEditorActionListener listener){
+        editView.setOnEditorActionListener(listener);
+    }
+
+    public void setOnFocusChangeListener(OnFocusChangeListener onFocusChangeListener) {
+        editView.setOnFocusChangeListener(onFocusChangeListener);
     }
 
     public String getEditText() {

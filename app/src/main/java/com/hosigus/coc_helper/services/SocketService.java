@@ -23,6 +23,8 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class SocketService extends Service {
+    private static final String TAG = "SocketServiceTest";
+
     private long sendTime = 0L;
     private long receiveTime ;
 
@@ -48,6 +50,8 @@ public class SocketService extends Service {
         send(HB_STR);
     }
     private void send(String msg) {
+        if (!msg.equals(HB_STR))
+            Log.d(TAG, "send: "+msg);
         if (mSocket==null || mSocket.get()==null)
             restartSocket();
         Socket soc = mSocket.get();
@@ -89,7 +93,7 @@ public class SocketService extends Service {
         try {
             if(mSocket!=null){
                 Socket sk = mSocket.get();
-                if (!sk.isClosed()){
+                if (sk!=null&&!sk.isClosed()){
                     sk.close();
                 }
                 sk=null;
@@ -129,6 +133,8 @@ public class SocketService extends Service {
                             && isStart) {
                         if (in.hasNextLine()) {
                             String message = in.nextLine();
+                            if (!message.equals(HB_STR))
+                                Log.d(TAG, "run: "+message);
                             receiveTime = System.currentTimeMillis();//收到信息，更新间隔时间
                             JSONObject json;
                             try {

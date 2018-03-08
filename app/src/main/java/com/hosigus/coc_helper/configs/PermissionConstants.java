@@ -5,5 +5,6 @@ package com.hosigus.coc_helper.configs;
  */
 
 public class PermissionConstants {
-    public static final int REQUEST_STORAGE = 0;
+    public static final int REQUEST_STORAGE_PIC = 0;
+    public static final int REQUEST_STORAGE_DOWNLOAD = 1;
 }

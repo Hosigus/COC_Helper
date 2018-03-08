@@ -8,6 +8,7 @@ public class NetConfig {
     public static final String GetStoryList = "http://coc.api.hosigus.tech/GetStory.php";
     public static final String AddStory = "http://coc.api.hosigus.tech/AddStory.php";
     public static final String LOrEStory = "http://coc.api.hosigus.tech/LOrEStory.php";
+    public static final String GetLastVersion = "http://coc.api.hosigus.tech/GetLastVersion.php";
 
     public static final String HOST = "159.203.169.45";
     public static final int PORT = 1112;

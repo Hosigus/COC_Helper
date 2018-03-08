@@ -385,6 +385,15 @@ public class COCUtils {
         }else return null;
     }
 
+    public static void saveAttChange(Attributes att,int id) {
+        ContentValues values = new ContentValues();
+        values.put("life", att.getLife());
+        values.put("san", att.getSan());
+        values.put("magic", att.getMagic());
+        values.put("state", att.getState());
+        db.update("player_attributes", values, "player_id = ?", new String[]{String.valueOf(id)});
+    }
+
     public interface CallBack {
         void onSaveEnd(Boolean state);
     }

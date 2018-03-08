@@ -16,13 +16,17 @@ import com.hosigus.coc_helper.R;
 import com.hosigus.coc_helper.adapters.SkillRecycleAdapter;
 import com.hosigus.coc_helper.items.Attributes;
 import com.hosigus.coc_helper.items.Investigator;
+import com.hosigus.coc_helper.utils.COCUtils;
 import com.hosigus.coc_helper.utils.DensityUtils;
 import com.hosigus.coc_helper.utils.FileUtils;
+import com.hosigus.coc_helper.utils.ToastUtils;
 import com.hosigus.coc_helper.views.HintEditView;
 import com.hosigus.coc_helper.views.PolygonView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by 某只机智 on 2018/2/28.
@@ -77,6 +81,20 @@ public class ShowInvestigatorDialog extends Dialog{
         HintEditView sanV = findViewById(R.id.hev_dsi_san);
         HintEditView mpV = findViewById(R.id.hev_dsi_mp);
         HintEditView stateV = findViewById(R.id.hev_dsi_state);
+
+        setOnDismissListener(dialog -> {
+            String p="\\d+ / \\d+";
+            if (lifeV.getEditText().matches(p))
+                att.setLife(Integer.parseInt(lifeV.getEditText().split(" / ")[0]));
+            if (sanV.getEditText().matches(p))
+                att.setSan(Integer.parseInt(sanV.getEditText().split(" / ")[0]));
+            if (mpV.getEditText().matches(p))
+                att.setMagic(Integer.parseInt(mpV.getEditText().split(" / ")[0]));
+            String state = stateV.getEditText();
+            if (state.length() < 11)
+                att.setState(state);
+            COCUtils.saveAttChange(att,i.getId());
+        });
 
         lifeV.setEditText(att.getLife()+" / "+att.getLifeMax());
         sanV.setEditText(att.getSan()+" / "+att.getSanMax());

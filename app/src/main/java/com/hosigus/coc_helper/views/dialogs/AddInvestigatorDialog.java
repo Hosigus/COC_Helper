@@ -59,7 +59,6 @@ public class AddInvestigatorDialog extends Dialog implements AdapterView.OnItemS
 
     private List<Profession> professionList;
     private List<String> prfessionNameList;
-    private List<Integer> skillIdList;
 
     private Profession mProfession;
     private Attributes attributes;
@@ -145,7 +144,7 @@ public class AddInvestigatorDialog extends Dialog implements AdapterView.OnItemS
     private void setView3() {
         initArr();
 
-        skillIdList = new ArrayList<>();
+        List<Integer> skillIdList = new ArrayList<>();
         skillIdList.add(96);
         skillIdList.add(28);
         skillIdList.add(25);
@@ -239,7 +238,7 @@ public class AddInvestigatorDialog extends Dialog implements AdapterView.OnItemS
         for (int i = 0; i < 9; i++) {
             HintEditView hev = attHevList.get(i);
             final int num = i;
-            hev.setOnChangeListenter((v, actionId, event) ->{
+            hev.setOnChangeListener((v, actionId, event) ->{
                 String text=hev.getEditText();
                 if (text.isEmpty()){
                     hev.setEditText("0");

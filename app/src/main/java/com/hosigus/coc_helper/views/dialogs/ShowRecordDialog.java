@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.method.ScrollingMovementMethod;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -174,36 +175,60 @@ public class ShowRecordDialog extends Dialog {
             PopupMenu popup = new PopupMenu(getContext(), o);
             popup.getMenu().add(0, 1, 0, "已学技能");
             popup.getMenu().add(0, 2, 0, "全部技能");
-            popup.getMenu().add(0, 3, 0, "自定义骰子");
+            SubMenu attSub = popup.getMenu().addSubMenu(0, 3, 0, "属性点");
+            attSub.add(1, 1, 0, "力量");
+            attSub.add(1, 2, 0, "敏捷");
+            attSub.add(1, 3, 0, "意志");
+            attSub.add(1, 4, 0, "体质");
+            attSub.add(1, 5, 0, "外貌");
+            attSub.add(1, 6, 0, "教育");
+            attSub.add(1, 7, 0, "体型");
+            attSub.add(1, 8, 0, "智力");
+            attSub.add(1, 9, 0, "幸运");
+            attSub.add(1, 10, 0, "San Check");
+            popup.getMenu().add(0, 4, 0, "自定义骰子");
             popup.setOnMenuItemClickListener(item -> {
-                if (item.getItemId()==1){
-                    sld = new SkillListDialog(getContext(),
-                            new SkillRecycleAdapter(investigator.getLearnedSkillList(), skill ->{
-                                mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
-                                sld.dismiss();
-                            }));
-                    sld.show();
-                }
-                if (item.getItemId()==2){
-                    sld = new SkillListDialog(getContext(),
-                            new SkillRecycleAdapter(COCUtils.selectSkillListWithLearned(investigator.getLearnedSkillList()), skill ->{
-                                mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
-                                sld.dismiss();
-                            }));
-                    sld.show();
+                if (item.getGroupId()==1){
+                    int i=item.getItemId();
+                    if (i==10)
+                        mRollCallBack.rollSkill("San",investigator.getAttributes().getSan());
+                    else
+                        mRollCallBack.rollSkill(String.valueOf(item.getTitle()), investigator.getAttributes().getAttAsList().get(i - 1));
+                    return false;
                 }
 
-                if (item.getItemId() == 3) {
-                    iid = new InputInfoDialog(getContext(), (hint, formula) -> {
-                        Matcher matcher = Pattern.compile("(\\d+d\\d+\\+)+\\d+").matcher(formula);
-                        if(matcher.find()&&matcher.groupCount()==1) {
-                            mRollCallBack.rollCustom(hint, formula);
-                            iid.dismiss();
-                        }else {
-                            ToastUtils.show("表达式不正确");
-                        }
-                    }, InputInfoDialog.TYPE_DICE);
-                    iid.show();
+                switch (item.getItemId()){
+                    case 1:{
+                        sld = new SkillListDialog(getContext(),
+                                new SkillRecycleAdapter(investigator.getLearnedSkillList(), skill ->{
+                                    mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
+                                    sld.dismiss();
+                                }));
+                        sld.show();
+                        break;
+                    }
+                    case 2:{
+                        sld = new SkillListDialog(getContext(),
+                                new SkillRecycleAdapter(COCUtils.selectSkillListWithLearned(investigator.getLearnedSkillList()), skill ->{
+                                    mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
+                                    sld.dismiss();
+                                }));
+                        sld.show();
+                        break;
+                    }
+                    case 4:{
+                        iid = new InputInfoDialog(getContext(), (hint, formula) -> {
+                            Matcher matcher = Pattern.compile("(\\d+d\\d+\\+)+\\d+").matcher(formula);
+                            if(matcher.find()&&matcher.groupCount()==1) {
+                                mRollCallBack.rollCustom(hint, formula);
+                                iid.dismiss();
+                            }else {
+                                ToastUtils.show("表达式不正确");
+                            }
+                        }, InputInfoDialog.TYPE_DICE);
+                        iid.show();
+                        break;
+                    }
                 }
                 return false;
             });

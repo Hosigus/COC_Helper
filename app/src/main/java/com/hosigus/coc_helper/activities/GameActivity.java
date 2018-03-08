@@ -104,10 +104,27 @@ public class GameActivity extends AppCompatActivity {
                     return;
                 }
                 StringBuilder sb = new StringBuilder("PC: ");
+                String pr = JSONUtils.parserStr(json, "point_result");
                 sb.append(JSONUtils.parserStr(json, "name")).append(" 投掷了: ").append(JSONUtils.parserStr(json, "roll_name")).append(" ");
-                if (rType == ROLL_SKILL)
-                    sb.append("(").append(JSONUtils.parserStr(json, "point")).append(") : ");
-                sb.append(JSONUtils.parserStr(json, "point_result"));
+                if (rType == ROLL_SKILL){
+                    String  skillP = JSONUtils.parserStr(json, "point");
+                    sb.append("(").append(skillP).append(") : ").append(pr).append(" ( ");
+                    int r = Integer.valueOf(pr), p = Integer.valueOf(skillP);
+                    if (r>95)
+                        sb.append("大失败!");
+                    else if (r<6)
+                        sb.append("大成功!");
+                    else if (r<=p/5)
+                        sb.append("极难成功");
+                    else if (r<=p/2)
+                        sb.append("困难成功");
+                    else if (r<=p)
+                        sb.append("成功");
+                    else
+                        sb.append("失败");
+                    sb.append(" )");
+                }else
+                    sb.append(pr);
                 recordDialog.addDetail(sb.toString());
                 break;
         }

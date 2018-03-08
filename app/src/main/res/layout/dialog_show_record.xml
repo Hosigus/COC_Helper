@@ -28,6 +28,7 @@
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginBottom="@dimen/dp_8"
         android:scrollbars="vertical"
+        android:lineSpacingExtra="@dimen/dp_2"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:text="\u3000\u3000这是详细内容，足足有这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么这么长" />
     <View

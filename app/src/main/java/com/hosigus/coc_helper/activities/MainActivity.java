@@ -1,17 +1,18 @@
 package com.hosigus.coc_helper.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -34,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hosigus.coc_helper.R;
-import com.hosigus.coc_helper.adapters.InvestigatorRecycleAdapter;
 import com.hosigus.coc_helper.adapters.MainPagerAdapter;
 import com.hosigus.coc_helper.configs.NetConfig;
 import com.hosigus.coc_helper.configs.PermissionConstants;
@@ -44,6 +44,7 @@ import com.hosigus.coc_helper.fragments.ModulePageFragment;
 import com.hosigus.coc_helper.items.Investigator;
 import com.hosigus.coc_helper.items.JSONResult;
 import com.hosigus.coc_helper.utils.COCUtils;
+import com.hosigus.coc_helper.utils.DownloadTask;
 import com.hosigus.coc_helper.utils.FileUtils;
 import com.hosigus.coc_helper.utils.NetConnectUtils;
 import com.hosigus.coc_helper.utils.ToastUtils;
@@ -54,11 +55,12 @@ import com.hosigus.coc_helper.views.PolygonView;
 import com.hosigus.coc_helper.views.dialogs.InveListDialog;
 import com.soundcloud.android.crop.Crop;
 
+import org.json.JSONException;
+
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.hosigus.coc_helper.activities.WelcomeActivity.db;
 
 public class MainActivity extends AppCompatActivity{
     public static final int CHOOSE_PIC = 0;
@@ -84,8 +86,58 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkUpdate();
         initData();
         initView();
+    }
+
+    private void checkUpdate() {
+        PackageManager packageManager=getPackageManager();
+        PackageInfo packageInfo;
+        String versionName="";
+        try {
+            packageInfo=packageManager.getPackageInfo(getPackageName(),0);
+            versionName=packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        final String finalVersionName = versionName;
+        NetConnectUtils.requestNet(NetConfig.GetLastVersion, new NetConnectUtils.NetCallBack() {
+            @Override
+            public void connectOK(JSONResult result) {
+                String version = null;
+                try {
+                    version = result.getData().getString("version");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                if (version.equals(finalVersionName)) {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("检测到有新版本,是否立即下载?")
+                            .setPositiveButton("立即下载", (d, w) -> {
+                                if (Build.VERSION.SDK_INT>22&&
+                                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                != PackageManager.PERMISSION_GRANTED){
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                            Manifest.permission.READ_EXTERNAL_STORAGE}, PermissionConstants.REQUEST_STORAGE_PIC);
+                                }else{
+                                    downloadApk();
+                                }
+                            })
+                            .setNegativeButton("先凑活用",(d,w)->{})
+                            .create().show();
+                }
+            }
+            @Override
+            public void connectFail(String resStr) {}
+        });
+    }
+
+    private void downloadApk() {
+        DownloadTask task = new DownloadTask(this);
+        task.execute("http://coc.api.hosigus.tech/COC_Helper.apk");
     }
 
     /**
@@ -287,7 +339,7 @@ public class MainActivity extends AppCompatActivity{
                     ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED){
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE}, PermissionConstants.REQUEST_STORAGE);
+                        Manifest.permission.READ_EXTERNAL_STORAGE}, PermissionConstants.REQUEST_STORAGE_PIC);
             }else{
                 choosePic();
             }
@@ -302,14 +354,16 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode==PermissionConstants.REQUEST_STORAGE){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-                choosePic();
-            }else {
+        for (int i:grantResults) {
+            if (i!=PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "没有授权伦家真的什么都做不了啦", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
+        if (requestCode==PermissionConstants.REQUEST_STORAGE_PIC)
+            choosePic();
+        if (requestCode==PermissionConstants.REQUEST_STORAGE_DOWNLOAD);
+            downloadApk();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

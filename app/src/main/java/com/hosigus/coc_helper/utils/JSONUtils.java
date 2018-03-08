@@ -1,5 +1,7 @@
 package com.hosigus.coc_helper.utils;
 
+import android.util.Log;
+
 import com.hosigus.coc_helper.items.JSONResult;
 import com.hosigus.coc_helper.items.Story;
 
@@ -47,6 +49,7 @@ public class JSONUtils {
         JSONResult result=new JSONResult();
         try {
             json=new JSONObject(jsonStr);
+            Log.d("Test", "parserJSON: "+jsonStr);
             result.setStatus(json.getInt("status"));
             result.setMessage(json.getString("message"));
             result.setData(json.getJSONObject("data"));
