@@ -8,9 +8,11 @@ import android.widget.ImageView;
 
 import com.hosigus.coc_helper.R;
 import com.hosigus.coc_helper.items.Investigator;
+import com.hosigus.coc_helper.utils.COCUtils;
 import com.hosigus.coc_helper.utils.FileUtils;
 import com.hosigus.coc_helper.views.HintEditView;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,6 +48,25 @@ public class InvestigatorRecycleAdapter extends RecyclerView.Adapter<Investigato
     public void refresh(List<Investigator> newList) {
         iList=newList;
         notifyDataSetChanged();
+    }
+
+    public void delData(int position) {
+        COCUtils.deleteI(iList.get(position));
+        iList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void swapData(int from, int to) {
+        if (from>to){
+            for (int i = from; i < to; i++) {
+                Collections.swap(iList,i,i+1);
+            }
+        }else {
+            for (int i = to ; i < from ; i++) {
+                Collections.swap(iList,i,i+1);
+            }
+        }
+        notifyItemMoved(from,to);
     }
 
     class IHolder extends RecyclerView.ViewHolder {

@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity{
                                         ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                                 != PackageManager.PERMISSION_GRANTED){
                                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                            Manifest.permission.READ_EXTERNAL_STORAGE}, PermissionConstants.REQUEST_STORAGE_PIC);
+                                            Manifest.permission.READ_EXTERNAL_STORAGE}, PermissionConstants.REQUEST_STORAGE_DOWNLOAD);
                                 }else{
                                     downloadApk();
                                 }
@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity{
         }
         if (requestCode==PermissionConstants.REQUEST_STORAGE_PIC)
             choosePic();
-        if (requestCode==PermissionConstants.REQUEST_STORAGE_DOWNLOAD);
+        if (requestCode==PermissionConstants.REQUEST_STORAGE_DOWNLOAD)
             downloadApk();
     }
     @Override

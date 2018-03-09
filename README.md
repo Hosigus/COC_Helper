@@ -4,7 +4,7 @@
 
 
 
-> 本文更新于2018.3.8。[最新版](http://coc.api.hosigus.tech/COC_Helper.apk)为alpha 1.3
+> 本文更新于2018.3.10。[最新版](http://coc.api.hosigus.tech/COC_Helper.apk)为alpha 1.31
 
 ## 应用简介
 

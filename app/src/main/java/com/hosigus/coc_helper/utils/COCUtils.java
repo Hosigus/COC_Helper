@@ -1,8 +1,11 @@
 package com.hosigus.coc_helper.utils;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
+import com.hosigus.coc_helper.MyApplication;
 import com.hosigus.coc_helper.items.Attributes;
 import com.hosigus.coc_helper.items.Investigator;
 import com.hosigus.coc_helper.items.Profession;
@@ -377,14 +380,6 @@ public class COCUtils {
         return skillList;
     }
 
-    public static List<Integer> parserDice(String str) {
-        // TODO: 2018/3/3
-        Matcher matcher = Pattern.compile("(\\d+d\\d+\\+)+\\d+").matcher(str);
-        if(matcher.find()&&matcher.groupCount()==1) {
-            return null;
-        }else return null;
-    }
-
     public static void saveAttChange(Attributes att,int id) {
         ContentValues values = new ContentValues();
         values.put("life", att.getLife());
@@ -392,6 +387,18 @@ public class COCUtils {
         values.put("magic", att.getMagic());
         values.put("state", att.getState());
         db.update("player_attributes", values, "player_id = ?", new String[]{String.valueOf(id)});
+    }
+
+    public static void deleteI(Investigator investigator) {
+        db.delete("player_info", "id = ?", new String[]{String.valueOf(investigator.getId())});
+        SharedPreferences preferences = MyApplication.getContext()
+                .getSharedPreferences("yummyInvestigator", Context.MODE_PRIVATE);
+        if (preferences.getInt("investigator_id",-1)==investigator.getId()){
+            SharedPreferences.Editor editor= preferences.edit();
+            editor.putInt("investigator_id",-1);
+            editor.apply();
+        }
+        FileUtils.deleteFile(investigator.getName() + investigator.getId());
     }
 
     public interface CallBack {

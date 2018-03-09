@@ -32,7 +32,6 @@ public class MyStoryFragment extends StoryFragment{
                 storyList.add(story);
             }while (cursor.moveToNext());
         }else {
-            ToastUtils.show("你还没有上传过段子呢，快来试试吧");
             setEmpty();
         }
         cursor.close();

@@ -175,8 +175,10 @@ public class GameActivity extends AppCompatActivity {
                 break;
             }
             case END:{
-                adapter.addRecord(recordDialog.getRecord());
-                recordDialog.dismiss();
+                if (recordDialog.isShowing()){
+                    adapter.addRecord(recordDialog.getRecord());
+                    recordDialog.dismiss();
+                }
                 break;
             }
         }

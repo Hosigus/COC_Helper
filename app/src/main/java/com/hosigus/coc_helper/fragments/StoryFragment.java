@@ -34,7 +34,7 @@ public abstract class StoryFragment extends Fragment {
     StoryRecycleAdapter adapter;
     private LinearLayout loadingLayout;
     private SwipeRefreshLayout refreshLayout;
-    private TextView emptyHint;
+    private SwipeRefreshLayout emptyHint;
 
     /**
      * 初始化数据
@@ -103,14 +103,14 @@ public abstract class StoryFragment extends Fragment {
     abstract void refreshStory();
 
     void onRefreshEnd(List<Story> storyList){
-        if (storyList==null){
-            onRefreshEnd();
-            return;
+        if (storyList!=null){
+            adapter.refreshStory(storyList);
+            if (adapter.getItemCount()==0)
+                emptyHint.setVisibility(View.VISIBLE);
+            else
+                emptyHint.setVisibility(View.GONE);
         }
-        if (emptyHint.getVisibility()==View.VISIBLE && storyList.size()>0)
-            emptyHint.setVisibility(View.GONE);
-        adapter.refreshStory(storyList);
-        refreshLayout.setRefreshing(false);
+        onRefreshEnd();
     }
 
     void setEmpty(){
@@ -118,7 +118,10 @@ public abstract class StoryFragment extends Fragment {
     }
 
     void onRefreshEnd(){
-        refreshLayout.setRefreshing(false);
+        if (emptyHint.isRefreshing())
+            emptyHint.setRefreshing(false);
+        if (refreshLayout.isRefreshing())
+            refreshLayout.setRefreshing(false);
     }
 
     /**
@@ -147,6 +150,7 @@ public abstract class StoryFragment extends Fragment {
         refreshLayout.setOnRefreshListener(this::refreshStory);
         loadingLayout = v.findViewById(R.id.ll_story_load);
         emptyHint = v.findViewById(R.id.hint_empty);
+        emptyHint.setOnRefreshListener(this::refreshStory);
 
         initAdapter();
 

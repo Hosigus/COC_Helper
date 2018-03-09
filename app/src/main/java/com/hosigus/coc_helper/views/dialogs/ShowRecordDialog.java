@@ -26,9 +26,6 @@ import com.hosigus.coc_helper.utils.DensityUtils;
 import com.hosigus.coc_helper.utils.NetConnectUtils;
 import com.hosigus.coc_helper.utils.ToastUtils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by 某只机智 on 2018/2/28.
  */
@@ -36,7 +33,7 @@ import java.util.regex.Pattern;
 public class ShowRecordDialog extends Dialog {
     private Record record;
     private int type;
-    private TextView titleV,detailV;
+    private TextView detailV;
     private StringBuilder sb;
     private KPBtnListener mKPBtnListener;
     private RollCallBack mRollCallBack;
@@ -84,7 +81,7 @@ public class ShowRecordDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_show_record);
-        titleV = findViewById(R.id.tv_show_record_title);
+        TextView titleV = findViewById(R.id.tv_show_record_title);
         detailV = findViewById(R.id.tv_show_record_detail);
         detailV.setMovementMethod(new ScrollingMovementMethod());
         titleV.setText(record.getTitle());
@@ -218,8 +215,7 @@ public class ShowRecordDialog extends Dialog {
                     }
                     case 4:{
                         iid = new InputInfoDialog(getContext(), (hint, formula) -> {
-                            Matcher matcher = Pattern.compile("(\\d+d\\d+\\+)+\\d+").matcher(formula);
-                            if(matcher.find()&&matcher.groupCount()==1) {
+                            if(formula.matches("(\\d+d\\d+\\+)+\\d?")) {
                                 mRollCallBack.rollCustom(hint, formula);
                                 iid.dismiss();
                             }else {
@@ -245,8 +241,7 @@ public class ShowRecordDialog extends Dialog {
         finishBtn.setOnClickListener(v -> mKPBtnListener.onFinish());
         rollBtn.setOnClickListener(v -> {
             iid = new InputInfoDialog(getContext(), (hint, formula) -> {
-                Matcher matcher = Pattern.compile("(\\d+d\\d+\\+)+\\d+").matcher(formula);
-                if(matcher.find()&&matcher.groupCount()==1) {
+                if(formula.matches("(\\d+d\\d+\\+)+\\d?")) {
                     mKPBtnListener.roll(hint, formula);
                     iid.dismiss();
                 }else {
