@@ -8,7 +8,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.BuildConfig;
+import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import java.io.File;
@@ -105,10 +108,18 @@ public class DownloadTask extends AsyncTask<String, Integer, Boolean> {
         super.onPostExecute(aBoolean);
         dialog.dismiss();
         if (aBoolean) {
+            File file=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"app-release.apk");
+            Uri fileUri;
+            if (Build.VERSION.SDK_INT >= 24) {
+                fileUri = FileProvider.getUriForFile(mContext, "com.hosigus.coc_helper.fileProvider", file);
+            } else {
+                fileUri = Uri.fromFile(file);
+            }
             Intent intent = new Intent("android.intent.action.VIEW");
             intent.addCategory("android.intent.category.DEFAULT");
-            intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"app-release.apk"))
-                    , "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(fileUri
+                    ,"application/vnd.android.package-archive");
             mContext.startActivity(intent);
         }else {
             Toast.makeText(mContext, "下载失败",Toast.LENGTH_SHORT).show();

@@ -3,7 +3,9 @@
     <color name="blue">#3F51B5</color>
     <color name="red">#ff000d</color>
     <color name="blue_dark">#303F9F</color>
+    <color name="blue_light">#2196f3</color>
     <color name="pink">#FF4081</color>
+    <color name="green">#ff74c077</color>
     <color name="transparent">#0000</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>

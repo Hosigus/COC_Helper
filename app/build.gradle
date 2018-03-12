@@ -3,11 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.coc_helper"
+        applicationId "com.hosigus.coc_helper"
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
-        versionName "alpha 1.31"
+        versionName "alpha 1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

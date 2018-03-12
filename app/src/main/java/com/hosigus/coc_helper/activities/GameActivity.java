@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.IInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -59,8 +58,15 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             socketBind= (SocketService.SocketBind) service;
-            socketBind.setOnReceiveMsg((type,json)->{
-                mHandler.post(()->{receiveMsg(type,json);});
+            socketBind.setCallBack(new SocketService.CallBack() {
+                @Override
+                public void receive(int type, JSONObject json) {mHandler.post(()->{receiveMsg(type,json);});}
+
+                @Override
+                public String restart() {
+                    return null;
+                    // TODO: 2018/3/12  
+                }
             });
         }
 
@@ -71,7 +77,6 @@ public class GameActivity extends AppCompatActivity {
     };
 
     private void receiveMsg(int type, JSONObject json) {
-        Log.d(TAG, "receiveMsg: "+json.toString());
         switch (type){
             case CLOSE: {
                 Record record = new Record();
@@ -94,39 +99,69 @@ public class GameActivity extends AppCompatActivity {
                 adapter.addRecord(record);
                 return;
             }
-            case ROLL:
+            case ROLL: {
                 int rType = Integer.parseInt(JSONUtils.parserStr(json, "roll_type"));
                 if (rType == ROLL_CUSTOM_KP) {
-                    if (mType==PC)
+                    if (mType == PC)
                         recordDialog.addDetail("KP悄悄的扔了一个暗骰");
-                    else if (mType==KP)
+                    else if (mType == KP)
                         recordDialog.addDetail("KP投掷了: " + JSONUtils.parserStr(json, "roll_name") + " " + JSONUtils.parserStr(json, "point_result"));
                     return;
                 }
-                StringBuilder sb = new StringBuilder("PC: ");
+                StringBuilder sb = new StringBuilder();
                 String pr = JSONUtils.parserStr(json, "point_result");
                 sb.append(JSONUtils.parserStr(json, "name")).append(" 投掷了: ").append(JSONUtils.parserStr(json, "roll_name")).append(" ");
-                if (rType == ROLL_SKILL){
-                    String  skillP = JSONUtils.parserStr(json, "point");
+                if (rType == ROLL_SKILL) {
+                    String skillP = JSONUtils.parserStr(json, "point");
                     sb.append("(").append(skillP).append(") : ").append(pr).append(" ( ");
                     int r = Integer.valueOf(pr), p = Integer.valueOf(skillP);
-                    if (r>95)
+                    if (r > 95)
                         sb.append("大失败!");
-                    else if (r<6)
+                    else if (r < 6)
                         sb.append("大成功!");
-                    else if (r<=p/5)
+                    else if (r <= p / 5)
                         sb.append("极难成功");
-                    else if (r<=p/2)
+                    else if (r <= p / 2)
                         sb.append("困难成功");
-                    else if (r<=p)
+                    else if (r <= p)
                         sb.append("成功");
                     else
                         sb.append("失败");
                     sb.append(" )");
-                }else
+                } else
                     sb.append(pr);
                 recordDialog.addDetail(sb.toString());
                 break;
+            }
+            case OUT:{
+                String name = JSONUtils.parserStr(json, "name");
+                if (name.equals("KP")) {
+                    new AlertDialog.Builder(this)
+                            .setTitle("KP融毁了房间")
+                            .setMessage("已升起的或会沉没，已沉没的或会升起")
+                            .setPositiveButton("献祭", (dialog, which) -> finish())
+                            .show();
+                }else {
+                    Record record = new Record();
+                    record.setType(Record.TYPE_NOTICE);
+                    record.setDetail(name+"离开了仪式");
+                    adapter.addRecord(record);
+                }
+            }
+            case ERROR:{
+                if (waitDialog.isShowing()) {
+                    waitDialog.dismiss();
+                }else{
+                    new AlertDialog.Builder(this)
+                            .setTitle("已断开连接")
+                            .setMessage("在永恒的宅邸拉莱耶中,长眠的克苏鲁候汝入梦")
+                            .setPositiveButton("长眠", (d, w) -> finish())
+                            .show();
+                }
+            }
+            case MSG:{
+                recordDialog.addDetail(JSONUtils.parserStr(json,"name")+"："+JSONUtils.parserStr(json,"msg"));
+            }
         }
 
         if (mType == PC)
@@ -148,7 +183,7 @@ public class GameActivity extends AppCompatActivity {
                 } else {
                     Record record = new Record();
                     record.setType(Record.TYPE_NOTICE);
-                    record.setDetail(getTimeTip() + JSONUtils.parserStr(json, "name") + "进入房间");
+                    record.setDetail(getTimeTip() + JSONUtils.parserStr(json, "name") + "加入了仪式");
                     adapter.addRecord(record);
                 }
                 break;
@@ -158,7 +193,7 @@ public class GameActivity extends AppCompatActivity {
                 Record record = new Record();
                 record.setTitle(JSONUtils.parserStr(json,"title"));
                 record.setDetail(getTimeTip() + "KP创建了" + record.getTitle());
-                recordDialog.setRollCallBack(new ShowRecordDialog.RollCallBack() {
+                recordDialog.setRollCallBack(new ShowRecordDialog.PCBtnListener() {
                     @Override
                     public void rollSkill(String name, int point) {
                         socketBind.sendRoll(name,point);
@@ -167,6 +202,11 @@ public class GameActivity extends AppCompatActivity {
                     @Override
                     public void rollCustom(String hint, String formula) {
                         socketBind.sendRoll(hint,formula);
+                    }
+
+                    @Override
+                    public void sendMsg(String msg) {
+                        socketBind.sendMsg(msg);
                     }
                 });
                 recordDialog.setInvestigator(i);
@@ -198,7 +238,7 @@ public class GameActivity extends AppCompatActivity {
             case ENTER:{
                 Record record = new Record();
                 record.setType(Record.TYPE_NOTICE);
-                record.setDetail(getTimeTip() + JSONUtils.parserStr(json, "name") + "进入房间");
+                record.setDetail(getTimeTip() + JSONUtils.parserStr(json, "name") + "加入了仪式");
                 adapter.addRecord(record);
                 break;
             }
@@ -213,8 +253,16 @@ public class GameActivity extends AppCompatActivity {
                         recordDialog.dismiss();
                     }
                     @Override
-                    public void roll(String hint, String formula) {
+                    public void rollDark(String hint, String formula) {
                         socketBind.sendKPRoll(hint,formula);
+                    }
+                    @Override
+                    public void roll(String hint, String formula) {
+                        socketBind.sendRoll(hint, formula);
+                    }
+                    @Override
+                    public void sendMsg(String msg) {
+                        socketBind.sendMsg(msg);
                     }
                 });
                 Record record = new Record();
@@ -228,11 +276,13 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void bindSocketService(){
+    private void onSocketService(){
+        startService(new Intent(this, SocketService.class));
         bindService(new Intent(this,SocketService.class),connection,BIND_AUTO_CREATE);
     }
-    private void unBindSocketService(){
+    private void offSocketService(){
         unbindService(connection);
+        stopService(new Intent(this, SocketService.class));
     }
 
     private void initDialogs() {
@@ -240,11 +290,11 @@ public class GameActivity extends AppCompatActivity {
         waitDialog.setCancelable(false);
         inputInfoDialog = new InputInfoDialog(this,(String room_name, String roomPwd)-> {
                 if (mType==KP){
-                    waitDialog.setTitle("正在创建房间……");
+                    waitDialog.setTitle("正在准备仪式……");
                     waitDialog.setMessage("克总发糖中……");
                     socketBind.sendCreate(room_name,roomPwd);
                 } else if (mType == PC) {
-                    waitDialog.setTitle("正在进入房间……");
+                    waitDialog.setTitle("正在加入仪式……");
                     waitDialog.setMessage("检验门之匙……");
                     socketBind.sendEnter(i.getName(),room_name,roomPwd);
                 }
@@ -277,14 +327,14 @@ public class GameActivity extends AppCompatActivity {
                 inputInfoDialog.show();
             });
             toolbar.setTitle("KP : "+roomName);
-            r.setDetail(getTimeTip()+"KP创建了房间 "+roomName);
+            r.setDetail(getTimeTip()+"KP创建了仪式 "+roomName);
         }else if (mType == PC){
             gameBtn.setText("查看人物卡");
             gameBtn.setOnClickListener(v->{
                 new  ShowInvestigatorDialog(this, i);
             });
             toolbar.setTitle("PC : "+i.getName()+"  "+roomName);
-            r.setDetail(getTimeTip()+"PC "+i.getName()+" 加入了房间 "+roomName);
+            r.setDetail(getTimeTip()+"PC "+i.getName()+" 加入了仪式 "+roomName);
         }
         setSupportActionBar(toolbar);
 
@@ -317,7 +367,7 @@ public class GameActivity extends AppCompatActivity {
         if (mType == PC) {
             i = COCUtils.selectInvestigatorById(extra.getInt("iId"));
         }
-        bindSocketService();
+        onSocketService();
 
         initDialogs();
     }
@@ -340,8 +390,8 @@ public class GameActivity extends AppCompatActivity {
     }
     @Override
     protected void onDestroy() {
+        offSocketService();
         super.onDestroy();
-        unBindSocketService();
     }
 
     public String getTimeTip() {

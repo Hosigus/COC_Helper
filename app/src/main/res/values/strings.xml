@@ -27,4 +27,10 @@
     <string name="confirm">确认</string>
     <string name="hint_empty">这里面，是空的呢.\n也许，在右上角，你能把我填满</string>
     <string name="room_info">房间信息</string>
+    <string name="introduce1">1. 本应用完全免费且无广告,为非商业个人作品 \n2. 本应用开源 GitHub：https://github.com/Hosigus/COC_Helper/blob/master/README.md \n3. 若有建议或BUG提交,可发邮件到邮箱 973367033@qq.com,注:标题请认真填写 \n4. 本应用尚为Alpha版本,仍有很多不足和BUG,请酌情使用
+    </string>
+    <string name="introduce2">1. 本应用为桌游 COC克苏鲁跑团 的辅助工具，适用于带萌新入坑 \n2. 本应用尚为Alpha版本,功能尚不全面,且仍有很多不足和BUG,请酌情使用 \n3. 本应用初步设计是为面团,若日后功能完善,会考虑设计网团相关功能 \n4. 本应用所使用的服务器属作者自费租的DigitOcean,由于服务器在国外,常有被墙的情况,作者能力有限,请多多谅解.\n5. 作者为学生,日常更新速度有限,见谅
+    </string>
+    <string name="introduce3">1. 快速车卡,操作简单 \n2. 游戏房间,按技能扔骰,方便快捷 \n3. 分享跑团中出现的尴尬情况 \n4. 具体操作可见GitHub链接中的Gif
+    </string>
 </resources>

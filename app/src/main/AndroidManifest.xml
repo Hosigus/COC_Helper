@@ -28,13 +28,27 @@
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.GameActivity"
+        <activity
+            android:name=".activities.GameActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.IntroduceActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".services.SocketService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.hosigus.coc_helper.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

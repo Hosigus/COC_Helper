@@ -57,7 +57,23 @@
 
     </LinearLayout>
 
-
+    <LinearLayout
+        android:id="@+id/ll_show_record_talk"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_show_record_msg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_show_record_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="发送"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_show_record_KP"
         android:visibility="gone"
@@ -69,7 +85,12 @@
             android:text="完成"
             android:background="@null" />
         <Button
-            android:id="@+id/btn_show_record_kp"
+            android:id="@+id/btn_kp_light"
+            style="@style/LL_avg"
+            android:text="投骰"
+            android:background="@null"/>
+        <Button
+            android:id="@+id/btn_kp_dark"
             style="@style/LL_avg"
             android:text="暗骰"
             android:background="@null" />

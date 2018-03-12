@@ -22,6 +22,7 @@ public class NetConfig {
     public static final String HB_STR = "{\"type\":1}";
     public static final String CLOSE_STR = "{\"type\":7}";
     public static final String END_STR = "{\"type\":9}";
+    public static final String OUT_STR = "{\"type\":10}";
 
     public static final int HB = 1;
     public static final int CREATE = 2;
@@ -32,6 +33,9 @@ public class NetConfig {
     public static final int CLOSE = 7;
     public static final int START = 8;
     public static final int END = 9;
+    public static final int OUT = 10;
+    public static final int MSG = 11;
+    public static final int ERROR = 1000;
 
     public static final int ROLL_CUSTOM = 1;
     public static final int ROLL_SKILL = 2;

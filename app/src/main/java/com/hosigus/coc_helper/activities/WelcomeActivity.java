@@ -2,6 +2,7 @@ package com.hosigus.coc_helper.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,7 +38,15 @@ public class WelcomeActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        MainActivity.actionStart(WelcomeActivity.this);
+        SharedPreferences preferences=getSharedPreferences("introduce",Context.MODE_PRIVATE);
+        try {
+            if (preferences.getBoolean("showed",false)&&preferences.getString("version","").equals(getPackageManager().getPackageInfo(getPackageName(),0).versionName))
+                MainActivity.actionStart(WelcomeActivity.this);
+            else
+                IntroduceActivity.actionStart(WelcomeActivity.this);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         finish();
     }
 }

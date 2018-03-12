@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 
-import com.hosigus.coc_helper.utils.JSONUtils;
 import com.hosigus.coc_helper.utils.ToastUtils;
 
 import org.json.JSONException;
@@ -23,10 +21,10 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class SocketService extends Service {
-    private static final String TAG = "SocketServiceTest";
 
     private long sendTime = 0L;
     private long receiveTime ;
+    private boolean isRun ;
 
     private ReadThread mReadThread;
     private WeakReference<Socket> mSocket;
@@ -40,7 +38,10 @@ public class SocketService extends Service {
             if(System.currentTimeMillis() - sendTime >= HEART_BEAT_RATE){
                 sendHB();
             }
-            mHander.postDelayed(this,HEART_BEAT_RATE);
+            if (isRun)
+                mHander.postDelayed(this,HEART_BEAT_RATE);
+            else
+                mHander.post(()-> send(OUT_STR));
         }
     };
 
@@ -50,12 +51,11 @@ public class SocketService extends Service {
         send(HB_STR);
     }
     private void send(String msg) {
-        if (!msg.equals(HB_STR))
-            Log.d(TAG, "send: "+msg);
-        if (mSocket==null || mSocket.get()==null)
-            restartSocket();
+        if ((mSocket==null || mSocket.get()==null)&&!restartSocket())
+            return;
         Socket soc = mSocket.get();
-        if (soc.isClosed() && !soc.isOutputShutdown()) {restartSocket();}
+        if (soc.isClosed() && !soc.isOutputShutdown()&&!restartSocket())
+            return;
         new Thread(()->{
             try {
                 OutputStream os = soc.getOutputStream();
@@ -72,10 +72,16 @@ public class SocketService extends Service {
             try {
                 receiveTime=System.currentTimeMillis();
                 Socket socket=new Socket(HOST,PORT);
-                mSocket= new WeakReference<>(socket);
+                mSocket = new WeakReference<>(socket);
                 mReadThread=new ReadThread(socket);
                 mReadThread.start();
                 mHander.postDelayed(heartBeatRunnable,HEART_BEAT_RATE);
+                mHander.post(()->{
+                    String vitalMsg = mBind.callBack.restart();
+                    if (vitalMsg!=null) {
+                        send(vitalMsg);
+                    }
+                });
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -83,11 +89,21 @@ public class SocketService extends Service {
             }
         }).start();
     }
-    private void restartSocket(){
-        mHander.removeCallbacks(heartBeatRunnable);
-        mReadThread.release();
-        releaseLastSocket(mSocket);
-        initSocket();
+    private boolean restartSocket(){
+        if (mReadThread==null){
+            initSocket();
+        }else {
+            mHander.removeCallbacks(heartBeatRunnable);
+            mReadThread.release();
+            releaseLastSocket(mSocket);
+            initSocket();
+        }
+        if (mReadThread==null){
+            mBind.callBack.receive(ERROR,null);
+            ToastUtils.show("连接不到服务器\n注:服务器在国外,可能被墙,过会再试试");
+            return false;
+        }
+        return true;
     }
     private void releaseLastSocket(WeakReference<Socket> mSocket){
         try {
@@ -106,8 +122,16 @@ public class SocketService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        isRun = true;
         initSocket();
     }
+
+    @Override
+    public void onDestroy() {
+        isRun = false;
+        super.onDestroy();
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBind;
@@ -134,7 +158,6 @@ public class SocketService extends Service {
                         if (in.hasNextLine()) {
                             String message = in.nextLine();
                             if (!message.equals(HB_STR))
-                                Log.d(TAG, "run: "+message);
                             receiveTime = System.currentTimeMillis();//收到信息，更新间隔时间
                             JSONObject json;
                             try {
@@ -146,7 +169,7 @@ public class SocketService extends Service {
                             }
                             int type = json.getInt("type");
                             if (type != HB) {
-                                mBind.onReceiveMsg.receive(type,json);
+                                mBind.callBack.receive(type,json);
                             }
                         }
                     }
@@ -160,10 +183,10 @@ public class SocketService extends Service {
     }
 
     public class SocketBind extends Binder{
-        private OnReceiveMsg onReceiveMsg;
+        private CallBack callBack;
 
-        public void setOnReceiveMsg(OnReceiveMsg onReceiveMsg) {
-            this.onReceiveMsg = onReceiveMsg;
+        public void setCallBack(CallBack callBack) {
+            this.callBack = callBack;
         }
 
         public void sendCreate(String roomName, String roomPwd){
@@ -249,7 +272,6 @@ public class SocketService extends Service {
         public void sendCLOSE(){
             send(CLOSE_STR);
         }
-
         public void sendStart(String title) {
             JSONObject json = new JSONObject();
             try {
@@ -263,9 +285,20 @@ public class SocketService extends Service {
         public void sendEnd(){
             send(END_STR);
         }
+        public void sendMsg(String msg){
+            JSONObject json = new JSONObject();
+            try {
+                json.put("type", MSG);
+                json.put("msg", msg);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            send(json.toString());
+        }
     }
 
-    public interface OnReceiveMsg{
+    public interface CallBack {
         void receive(int type,JSONObject object);
+        String restart();
     }
 }

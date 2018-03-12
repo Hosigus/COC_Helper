@@ -9,6 +9,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class ShowRecordDialog extends Dialog {
     private TextView detailV;
     private StringBuilder sb;
     private KPBtnListener mKPBtnListener;
-    private RollCallBack mRollCallBack;
+    private PCBtnListener mPCBtnListener;
     private Investigator investigator;
     private InputInfoDialog iid;
     private SkillListDialog sld;
@@ -59,8 +60,8 @@ public class ShowRecordDialog extends Dialog {
         this.mKPBtnListener = mKPBtnListener;
     }
 
-    public void setRollCallBack(RollCallBack mRollCallBack) {
-        this.mRollCallBack = mRollCallBack;
+    public void setRollCallBack(PCBtnListener mPCBtnListener) {
+        this.mPCBtnListener = mPCBtnListener;
     }
 
     public void setInvestigator(Investigator investigator) {
@@ -94,7 +95,21 @@ public class ShowRecordDialog extends Dialog {
             initNormalBtn();
     }
 
+    private void initTalkBtn(OnSendMsg onSendMsg){
+        LinearLayout talkL = findViewById(R.id.ll_show_record_talk);
+        talkL.setVisibility(View.VISIBLE);
+        Button send = findViewById(R.id.btn_show_record_send);
+        EditText msgV = findViewById(R.id.et_show_record_msg);
+        send.setOnClickListener(v->{
+            String msg = msgV.getText().toString();
+            if (msg.isEmpty())
+                return;
+            onSendMsg.sendMsg(msg);
+            msgV.setText("");
+        });
+    }
     private void initPCBtn(){
+        initTalkBtn(mPCBtnListener);
         LinearLayout pcl = findViewById(R.id.ll_show_record_PC);
         pcl.setVisibility(View.VISIBLE);
         Button r,t,s,b,o;
@@ -110,9 +125,9 @@ public class ShowRecordDialog extends Dialog {
             popup.getMenu().add(0, 2, 0, "聆听");
             popup.setOnMenuItemClickListener(item -> {
                 if (item.getItemId()==1)
-                    mRollCallBack.rollSkill("观察",COCUtils.getSkillPointFromI(investigator,7));
+                    mPCBtnListener.rollSkill("观察",COCUtils.getSkillPointFromI(investigator,7));
                 if (item.getItemId()==2)
-                    mRollCallBack.rollSkill("聆听",COCUtils.getSkillPointFromI(investigator,35));
+                    mPCBtnListener.rollSkill("聆听",COCUtils.getSkillPointFromI(investigator,35));
                 return false;
             });
             popup.show();
@@ -126,13 +141,13 @@ public class ShowRecordDialog extends Dialog {
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()){
                     case 1:
-                        mRollCallBack.rollSkill("话术",COCUtils.getSkillPointFromI(investigator,68));break;
+                        mPCBtnListener.rollSkill("话术",COCUtils.getSkillPointFromI(investigator,68));break;
                     case 2:
-                        mRollCallBack.rollSkill("恐吓",COCUtils.getSkillPointFromI(investigator,69));break;
+                        mPCBtnListener.rollSkill("恐吓",COCUtils.getSkillPointFromI(investigator,69));break;
                     case 3:
-                        mRollCallBack.rollSkill("说服",COCUtils.getSkillPointFromI(investigator,70));break;
+                        mPCBtnListener.rollSkill("说服",COCUtils.getSkillPointFromI(investigator,70));break;
                     case 4:
-                        mRollCallBack.rollSkill("魅惑",COCUtils.getSkillPointFromI(investigator,71));break;
+                        mPCBtnListener.rollSkill("魅惑",COCUtils.getSkillPointFromI(investigator,71));break;
                 }
                 return false;
             });
@@ -147,11 +162,11 @@ public class ShowRecordDialog extends Dialog {
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()){
                     case 1:
-                        mRollCallBack.rollSkill("闪避",COCUtils.getSkillPointFromI(investigator,28));break;
+                        mPCBtnListener.rollSkill("闪避",COCUtils.getSkillPointFromI(investigator,28));break;
                     case 2:
                         sld = new SkillListDialog(getContext(),
                                 new SkillRecycleAdapter(COCUtils.selectSkillListByExtra(investigator.getLearnedSkillList(), "格斗"),skill ->{
-                                    mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
+                                    mPCBtnListener.rollSkill(skill.getName(),skill.getSumPoint());
                                     sld.dismiss();
                                 }));
                         sld.show();
@@ -159,7 +174,7 @@ public class ShowRecordDialog extends Dialog {
                     case 3:
                         sld = new SkillListDialog(getContext(),
                                 new SkillRecycleAdapter(COCUtils.selectSkillListByExtra(investigator.getLearnedSkillList(), "射击"),skill ->{
-                                        mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
+                                        mPCBtnListener.rollSkill(skill.getName(),skill.getSumPoint());
                                         sld.dismiss();
                                 }));
                         sld.show();
@@ -183,72 +198,120 @@ public class ShowRecordDialog extends Dialog {
             attSub.add(1, 8, 0, "智力");
             attSub.add(1, 9, 0, "幸运");
             attSub.add(1, 10, 0, "San Check");
-            popup.getMenu().add(0, 4, 0, "自定义骰子");
+            SubMenu cSub = popup.getMenu().addSubMenu(0, 4, 0, "自定义骰子");
+            cSub.add(2, 1, 0, "自定义");
+            cSub.add(2, 2, 0, "1d100");
+            cSub.add(2, 3, 0, "1d20");
+            cSub.add(2, 4, 0, "1d10");
+            cSub.add(2, 5, 0, "1d8");
+            cSub.add(2, 6, 0, "1d6");
+            cSub.add(2, 7, 0, "1d4");
             popup.setOnMenuItemClickListener(item -> {
                 if (item.getGroupId()==1){
                     int i=item.getItemId();
                     if (i==10)
-                        mRollCallBack.rollSkill("San",investigator.getAttributes().getSan());
+                        mPCBtnListener.rollSkill("San Check",investigator.getAttributes().getSan());
                     else
-                        mRollCallBack.rollSkill(String.valueOf(item.getTitle()), investigator.getAttributes().getAttAsList().get(i - 1));
-                    return false;
-                }
-
-                switch (item.getItemId()){
-                    case 1:{
-                        sld = new SkillListDialog(getContext(),
-                                new SkillRecycleAdapter(investigator.getLearnedSkillList(), skill ->{
-                                    mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
-                                    sld.dismiss();
-                                }));
-                        sld.show();
-                        break;
-                    }
-                    case 2:{
-                        sld = new SkillListDialog(getContext(),
-                                new SkillRecycleAdapter(COCUtils.selectSkillListWithLearned(investigator.getLearnedSkillList()), skill ->{
-                                    mRollCallBack.rollSkill(skill.getName(),skill.getSumPoint());
-                                    sld.dismiss();
-                                }));
-                        sld.show();
-                        break;
-                    }
-                    case 4:{
+                        mPCBtnListener.rollSkill(String.valueOf(item.getTitle()), investigator.getAttributes().getAttAsList().get(i - 1));
+                }else if (item.getGroupId() == 2) {
+                    if (item.getItemId()==1){
                         iid = new InputInfoDialog(getContext(), (hint, formula) -> {
                             if(formula.matches("(\\d+d\\d+\\+)+\\d?")) {
-                                mRollCallBack.rollCustom(hint, formula);
+                                mPCBtnListener.rollCustom(hint, formula);
                                 iid.dismiss();
                             }else {
                                 ToastUtils.show("表达式不正确");
                             }
                         }, InputInfoDialog.TYPE_DICE);
                         iid.show();
-                        break;
+                    }else {
+                        mPCBtnListener.rollCustom("快速掷骰", String.valueOf(item.getTitle()));
                     }
+                    return false;
+                }else if (item.getItemId()==1){
+                    sld = new SkillListDialog(getContext(),
+                            new SkillRecycleAdapter(investigator.getLearnedSkillList(), skill ->{
+                                mPCBtnListener.rollSkill(skill.getName(),skill.getSumPoint());
+                                sld.dismiss();
+                            }));
+                    sld.show();
+                }else if (item.getItemId()==2){
+                    sld = new SkillListDialog(getContext(),
+                            new SkillRecycleAdapter(COCUtils.selectSkillListWithLearned(investigator.getLearnedSkillList()), skill ->{
+                                mPCBtnListener.rollSkill(skill.getName(),skill.getSumPoint());
+                                sld.dismiss();
+                            }));
+                    sld.show();
                 }
                 return false;
             });
             popup.show();
         });
-
     }
     private void initKPBtn(){
+        initTalkBtn(mKPBtnListener);
         LinearLayout kpl = findViewById(R.id.ll_show_record_KP);
         kpl.setVisibility(View.VISIBLE);
-        Button finishBtn,rollBtn;
+        Button finishBtn,darkRollBtn,lightRollBtn;
+
         finishBtn = findViewById(R.id.btn_show_record_finish);
-        rollBtn = findViewById(R.id.btn_show_record_kp);
+        darkRollBtn = findViewById(R.id.btn_kp_dark);
+        lightRollBtn = findViewById(R.id.btn_kp_light);
+
         finishBtn.setOnClickListener(v -> mKPBtnListener.onFinish());
-        rollBtn.setOnClickListener(v -> {
-            iid = new InputInfoDialog(getContext(), (hint, formula) -> {
-                if(formula.matches("(\\d+d\\d+\\+)+\\d?")) {
-                    mKPBtnListener.roll(hint, formula);
-                    iid.dismiss();
+        darkRollBtn.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(getContext(), darkRollBtn);
+            popup.getMenu().add(0, 1, 0, "自定义");
+            popup.getMenu().add(0, 2, 0, "1d100");
+            popup.getMenu().add(0, 3, 0, "1d20");
+            popup.getMenu().add(0, 4, 0, "1d10");
+            popup.getMenu().add(0, 5, 0, "1d8");
+            popup.getMenu().add(0, 6, 0, "1d6");
+            popup.getMenu().add(0, 7, 0, "1d4");
+            popup.setOnMenuItemClickListener(item -> {
+                if (item.getItemId()==1) {
+                    iid = new InputInfoDialog(getContext(), (hint, formula) -> {
+                        if (formula.matches("(\\d+d\\d+\\+)+\\d?")) {
+                            mKPBtnListener.rollDark(hint, formula);
+                            iid.dismiss();
+                        } else {
+                            ToastUtils.show("表达式不正确");
+                        }
+                    }, InputInfoDialog.TYPE_DICE);
+                    iid.show();
                 }else {
-                    ToastUtils.show("表达式不正确");
+                    mKPBtnListener.rollDark("快速掷骰", String.valueOf(item.getTitle()));
                 }
-            }, InputInfoDialog.TYPE_DICE);
-            iid.show();
+                return false;
+            });
+            popup.show();
+        });
+        lightRollBtn.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(getContext(), lightRollBtn);
+            popup.getMenu().add(0, 1, 0, "自定义");
+            popup.getMenu().add(0, 2, 0, "1d100");
+            popup.getMenu().add(0, 3, 0, "1d20");
+            popup.getMenu().add(0, 4, 0, "1d10");
+            popup.getMenu().add(0, 5, 0, "1d8");
+            popup.getMenu().add(0, 6, 0, "1d6");
+            popup.getMenu().add(0, 7, 0, "1d4");
+            popup.setOnMenuItemClickListener(item -> {
+                if (item.getItemId()==1) {
+                    iid = new InputInfoDialog(getContext(), (hint, formula) -> {
+                        if (formula.matches("(\\d+d\\d+\\+)+\\d?")) {
+                            mKPBtnListener.roll(hint, formula);
+                            iid.dismiss();
+                        } else {
+                            ToastUtils.show("表达式不正确");
+                        }
+                    }, InputInfoDialog.TYPE_DICE);
+                    iid.show();
+                }else {
+                    mKPBtnListener.roll("快速掷骰", String.valueOf(item.getTitle()));
+                }
+                return false;
+            });
+            popup.show();
         });
     }
     private void initNormalBtn(){
@@ -300,14 +363,18 @@ public class ShowRecordDialog extends Dialog {
         });
     }
 
-    public interface KPBtnListener {
+    public interface KPBtnListener extends OnSendMsg{
         void onFinish();
-        void roll(String hint,String formula);
+        void roll(String hint, String formula);
+        void rollDark(String hint, String formula);
     }
 
-    public interface RollCallBack{
+    public interface PCBtnListener extends OnSendMsg{
         void rollSkill(String name,int point);
         void rollCustom(String hint,String formula);
     }
 
+    private interface OnSendMsg{
+        void sendMsg(String msg);
+    }
 }

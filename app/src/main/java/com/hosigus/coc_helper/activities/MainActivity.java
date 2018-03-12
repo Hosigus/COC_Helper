@@ -92,12 +92,9 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void checkUpdate() {
-        PackageManager packageManager=getPackageManager();
-        PackageInfo packageInfo;
         String versionName="";
         try {
-            packageInfo=packageManager.getPackageInfo(getPackageName(),0);
-            versionName=packageInfo.versionName;
+            versionName=getPackageManager().getPackageInfo(getPackageName(),0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -262,14 +259,17 @@ public class MainActivity extends AppCompatActivity{
             initLovecraftPolygon();
         }
         Button changeBtn = findViewById(R.id.btn_choose_yi);
-        chooseIDialog=new InveListDialog(this, i->{
-            SharedPreferences.Editor editor= mPreferences.edit();
-            editor.putInt("investigator_id",i.getId());
-            editor.apply();
-            yummyInvestigator = i;
-            initYummyIPolygon();
+
+        changeBtn.setOnClickListener(v-> {
+            chooseIDialog=new InveListDialog(this, i->{
+                SharedPreferences.Editor editor= mPreferences.edit();
+                editor.putInt("investigator_id",i.getId());
+                editor.apply();
+                yummyInvestigator = i;
+                initYummyIPolygon();
+            });
+            chooseIDialog.show();
         });
-        changeBtn.setOnClickListener(v-> chooseIDialog.show());
     }
 
     private void initYummyIPolygon() {

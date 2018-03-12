@@ -21,20 +21,20 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dp_98"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <com.hosigus.coc_helper.views.HintEditView
                 android:id="@+id/hev_dai_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_24"
                 app:hintText="姓名："/>
 
             <com.hosigus.coc_helper.views.HintEditView
                 android:id="@+id/hev_dai_age"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_24"
                 app:textInputType="@integer/input_number"
                 app:hintText="年龄："/>
 
@@ -42,14 +42,14 @@
                 android:id="@+id/hev_dai_sex"
                 android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_24"
                 app:editAble="false"
                 app:hintText="性别："/>
 
             <LinearLayout
                 android:id="@+id/ll_dai_sex"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/dp_24">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,14 +60,14 @@
                 <Spinner
                     android:id="@+id/s_dai_sex"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/dp_24"
                     android:entries="@array/sex" />
             </LinearLayout>
 
             <com.hosigus.coc_helper.views.HintEditView
                 android:id="@+id/hev_dai_decade"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_24"
                 app:hintText="年代："/>
 
         </LinearLayout>
