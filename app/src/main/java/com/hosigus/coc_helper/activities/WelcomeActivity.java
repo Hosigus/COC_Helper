@@ -17,6 +17,7 @@ import android.view.WindowManager;
 
 import com.hosigus.coc_helper.R;
 import com.hosigus.coc_helper.configs.NetConfig;
+import com.hosigus.coc_helper.configs.Settings;
 import com.hosigus.coc_helper.items.JSONResult;
 import com.hosigus.coc_helper.utils.COCSQLHelper;
 import com.hosigus.coc_helper.utils.NetConnectUtils;
@@ -47,6 +48,7 @@ public class WelcomeActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        Settings.initData();
         finish();
     }
 }

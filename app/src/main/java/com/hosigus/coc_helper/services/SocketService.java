@@ -6,6 +6,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 
+import com.hosigus.coc_helper.utils.LogUtils;
 import com.hosigus.coc_helper.utils.ToastUtils;
 
 import org.json.JSONException;
@@ -17,40 +18,33 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class SocketService extends Service {
-
-    private long sendTime = 0L;
-    private long receiveTime ;
     private boolean isRun ;
 
     private ReadThread mReadThread;
     private WeakReference<Socket> mSocket;
 
-    private Handler mHander = new Handler();
+    private Handler mHandler = new Handler();
     private SocketBind mBind = new SocketBind();
 
     private Runnable heartBeatRunnable = new Runnable() {
         @Override
         public void run() {
-            if(System.currentTimeMillis() - sendTime >= HEART_BEAT_RATE){
-                sendHB();
-            }
+            sendHB();
             if (isRun)
-                mHander.postDelayed(this,HEART_BEAT_RATE);
+                mHandler.postDelayed(this,HEART_BEAT_RATE);
             else
-                mHander.post(()-> send(OUT_STR));
+                mHandler.post(()-> send(OUT_STR));
         }
     };
 
     private void sendHB() {
-        if(System.currentTimeMillis()-receiveTime>NOT_RESPONSE_LIMIT)
-            restartSocket();
         send(HB_STR);
     }
     private void send(String msg) {
+        LogUtils.d("Test", "send: "+msg);
         if ((mSocket==null || mSocket.get()==null)&&!restartSocket())
             return;
         Socket soc = mSocket.get();
@@ -61,7 +55,6 @@ public class SocketService extends Service {
                 OutputStream os = soc.getOutputStream();
                 os.write((msg+"\n").getBytes("UTF-8"));
                 os.flush();
-                sendTime = System.currentTimeMillis();//发送后更改心跳时间
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,22 +63,21 @@ public class SocketService extends Service {
     private void initSocket(){
         new Thread(()->{
             try {
-                receiveTime=System.currentTimeMillis();
                 Socket socket=new Socket(HOST,PORT);
                 mSocket = new WeakReference<>(socket);
                 mReadThread=new ReadThread(socket);
                 mReadThread.start();
-                mHander.postDelayed(heartBeatRunnable,HEART_BEAT_RATE);
-                mHander.post(()->{
+                mHandler.removeCallbacks(heartBeatRunnable);
+                mHandler.postDelayed(heartBeatRunnable,HEART_BEAT_RATE);
+                mHandler.post(()->{
                     String vitalMsg = mBind.callBack.restart();
                     if (vitalMsg!=null) {
                         send(vitalMsg);
                     }
                 });
-            } catch (UnknownHostException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                ToastUtils.show("连接不到服务器\n注:服务器在国外,可能被墙,过会再试试");
             }
         }).start();
     }
@@ -93,7 +85,6 @@ public class SocketService extends Service {
         if (mReadThread==null){
             initSocket();
         }else {
-            mHander.removeCallbacks(heartBeatRunnable);
             mReadThread.release();
             releaseLastSocket(mSocket);
             initSocket();
@@ -157,8 +148,6 @@ public class SocketService extends Service {
                             && isStart) {
                         if (in.hasNextLine()) {
                             String message = in.nextLine();
-                            if (!message.equals(HB_STR))
-                            receiveTime = System.currentTimeMillis();//收到信息，更新间隔时间
                             JSONObject json;
                             try {
                                 json = new JSONObject(message);

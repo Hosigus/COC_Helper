@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="needAnimator"
+        android:title="开始游戏按钮动画效果"
+        android:summary="如果出现按键按钮无反应,请关闭此项"/>
+
+    <EditTextPreference
+        android:defaultValue="15"
+        android:inputType="number"
+        android:maxLength="2"
+        android:singleLine="true"
+        android:key="storyNumInPage"
+        android:title="单次加载段子数"
+        android:summary="默认为15"/>
+
+    <Preference
+        android:key="about"
+        android:title="关于"
+        android:summary="查看相关信息" />
+
+</PreferenceScreen>

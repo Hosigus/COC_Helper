@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import com.hosigus.coc_helper.R;
 import com.hosigus.coc_helper.adapters.MainPagerAdapter;
 import com.hosigus.coc_helper.configs.NetConfig;
 import com.hosigus.coc_helper.configs.PermissionConstants;
+import com.hosigus.coc_helper.configs.Settings;
 import com.hosigus.coc_helper.fragments.HomePageFragment;
 import com.hosigus.coc_helper.fragments.InvestigatorPageFragment;
 import com.hosigus.coc_helper.fragments.ModulePageFragment;
@@ -230,9 +233,9 @@ public class MainActivity extends AppCompatActivity{
      */
     private void initFoldFabGroup() {
         FoldFabGroup group=findViewById(R.id.ffg_main);
-        List<FoldFabGroup.OnChildViewClickListener> listeners=new ArrayList<>();
-        listeners.add(()->{
-            InveListDialog cid=new InveListDialog(this, i -> {
+        List<FoldFabGroup.OnChildViewClickListener> listeners = new ArrayList<>();
+        listeners.add(() -> {
+            InveListDialog cid = new InveListDialog(this, i -> {
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
                 intent.putExtra("iId", i.getId());
                 intent.putExtra("type", GameActivity.PC);
@@ -240,12 +243,28 @@ public class MainActivity extends AppCompatActivity{
             });
             cid.show();
         });
-        listeners.add(()->{
+        listeners.add(() -> {
             Intent intent = new Intent(MainActivity.this, GameActivity.class);
             intent.putExtra("type", GameActivity.KP);
             startActivity(intent);
         });
-        group.setClickListeners(listeners);
+        if (Settings.needAnimator){
+            group.setClickListeners(listeners);
+        }else {
+            FloatingActionButton start = findViewById(R.id.fab_main);
+            start.setVisibility(View.VISIBLE);
+            group.setVisibility(View.GONE);
+            start.setOnClickListener(v->{
+                final String items[] = {"我是KP", "我是PC"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(this,3);
+                builder.setTitle("开始游戏");
+                builder.setItems(items, (dialog, which) -> {
+                    listeners.get(which==0?1:0).onClick();
+                    dialog.dismiss();
+                });
+                builder.create().show();
+            });
+        }
     }
 
     /**
@@ -408,6 +427,7 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()){
             // TODO: 2018/2/11
             case R.id.action_settings:
+                SettingsActivity.actionStart(MainActivity.this);
                 break;
             case R.id.action_add_story:
                 initAddStoryDialog();

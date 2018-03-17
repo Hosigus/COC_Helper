@@ -69,6 +69,7 @@ public class SkillRecycleAdapter extends RecyclerView.Adapter<SkillRecycleAdapte
         private View v;
         private TextView nameTV,startTV,sumTV;
         private EditText proET,intET;
+        private String lastPro,lastInt;
         SkillHolder(View v) {
             super(v);
             this.v = v;
@@ -78,60 +79,52 @@ public class SkillRecycleAdapter extends RecyclerView.Adapter<SkillRecycleAdapte
             proET = v.findViewById(R.id.et_item_skill_pro);
             intET = v.findViewById(R.id.et_item_skill_int);
         }
+        private void tryChangePro(){
+            int newP=Integer.parseInt(proET.getText().toString());
+            if(getSum()>100||!mChangeCallBack.tryChangePro(newP-Integer.parseInt(lastPro))){
+                proET.setText(lastPro);
+            }else {
+                sumTV.setText(String.valueOf(getSum()));
+                skillList.get(getAdapterPosition()).setProPoint(newP);
+            }
+        }
+        private void tryChangeInt(){
+            int newP=Integer.parseInt(intET.getText().toString());
+            if(getSum()>100||!mChangeCallBack.tryChangeInt(newP-Integer.parseInt(lastInt))){
+                intET.setText(lastInt);
+            }else {
+                sumTV.setText(String.valueOf(getSum()));
+                skillList.get(getAdapterPosition()).setIntPoint(newP);
+            }
+        }
         void setSkill(Skill skill){
             nameTV.setText(skill.getName());
             startTV.setText(String.valueOf(skill.getStartPoint()));
             if (skill.getId()==25||profession.isProSkill(skill,skillList)) {
                 proET.setText(String.valueOf(skill.getProPoint()));
-                proET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    String text;
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus){
-                            text=proET.getText().toString();
-                        }else {
-                            String s = proET.getText().toString();
-                            if (s.isEmpty()) {
-                                intET.setText(text);
-                                return;
-                            }
-                            if(getSum()>100||!mChangeCallBack.tryChangePro(Integer.parseInt(s)-Integer.parseInt(text))){
-                                proET.setText(text);
-                            }else {
-                                sumTV.setText(String.valueOf(getSum()));
-                                int position = getAdapterPosition();
-                                skillList.get(position).setProPoint(Integer.parseInt(s));
-                            }
-                        }
+                proET.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus){
+                        lastPro =proET.getText().toString();
+                    }else if (proET.getText().toString().isEmpty()){
+                        proET.setText(lastPro);
+                    }else {
+                        tryChangePro();
                     }
                 });
-            }
-            else
+            } else {
                 proET.setEnabled(false);
-            if (skill.getId()==25)
+            }
+            if (skill.getId()==25) {
                 intET.setEnabled(false);
-            else{
+            }else{
                 intET.setText(String.valueOf(skill.getIntPoint()));
-                intET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    String text;
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus){
-                            text=intET.getText().toString();
-                        }else {
-                            String s=intET.getText().toString();
-                            if (s.isEmpty()) {
-                                intET.setText(text);
-                                return;
-                            }
-                            if(getSum()>100||!mChangeCallBack.tryChangeInt(Integer.parseInt(s)-Integer.parseInt(text))){
-                                intET.setText(text);
-                            }else {
-                                sumTV.setText(String.valueOf(getSum()));
-                                int position = getAdapterPosition();
-                                skillList.get(position).setIntPoint(Integer.parseInt(s));
-                            }
-                        }
+                intET.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus){
+                        lastInt =intET.getText().toString();
+                    }else if (intET.getText().toString().isEmpty()) {
+                        intET.setText(lastInt);
+                    }else {
+                        tryChangeInt();
                     }
                 });
             }

@@ -25,7 +25,7 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/dp_16"
             android:orientation="vertical">
             <TextView
@@ -33,10 +33,23 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_16"
                 android:textColor="@color/green"
+                android:text="版本信息"/>
+            <TextView
+                android:layout_margin="@dimen/dp_8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_12"
+                android:text="@string/introduce0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_16"
+                android:layout_marginTop="@dimen/dp_16"
+                android:textColor="@color/green"
                 android:text="应用简介"/>
             <TextView
                 android:layout_margin="@dimen/dp_8"
-                android:autoLink="web"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_12"
@@ -50,7 +63,6 @@
                 android:text="使用说明"/>
             <TextView
                 android:layout_margin="@dimen/dp_8"
-                android:autoLink="web"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_12"

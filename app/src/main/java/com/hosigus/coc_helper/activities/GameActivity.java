@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.hosigus.coc_helper.R;
@@ -108,7 +109,7 @@ public class GameActivity extends AppCompatActivity {
                         recordDialog.addDetail("KP投掷了: " + JSONUtils.parserStr(json, "roll_name") + " " + JSONUtils.parserStr(json, "point_result"));
                     return;
                 }
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder(getTimeTip());
                 String pr = JSONUtils.parserStr(json, "point_result");
                 sb.append(JSONUtils.parserStr(json, "name")).append(" 投掷了: ").append(JSONUtils.parserStr(json, "roll_name")).append(" ");
                 if (rType == ROLL_SKILL) {
@@ -144,9 +145,10 @@ public class GameActivity extends AppCompatActivity {
                 }else {
                     Record record = new Record();
                     record.setType(Record.TYPE_NOTICE);
-                    record.setDetail(name+"离开了仪式");
+                    record.setDetail(getTimeTip()+name+"离开了仪式");
                     adapter.addRecord(record);
                 }
+                break;
             }
             case ERROR:{
                 if (waitDialog.isShowing()) {
@@ -158,9 +160,11 @@ public class GameActivity extends AppCompatActivity {
                             .setPositiveButton("长眠", (d, w) -> finish())
                             .show();
                 }
+                break;
             }
             case MSG:{
                 recordDialog.addDetail(JSONUtils.parserStr(json,"name")+"："+JSONUtils.parserStr(json,"msg"));
+                break;
             }
         }
 
@@ -347,6 +351,8 @@ public class GameActivity extends AppCompatActivity {
         }));
 
         rv.setAdapter(adapter);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     // TODO: 2018/2/27  menuSelect

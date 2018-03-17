@@ -33,4 +33,5 @@
     </string>
     <string name="introduce3">1. 快速车卡,操作简单 \n2. 游戏房间,按技能扔骰,方便快捷 \n3. 分享跑团中出现的尴尬情况 \n4. 具体操作可见GitHub链接中的Gif
     </string>
+    <string name="introduce0">更新内容（版本号: alpha 1.42）:\n1. 适配了部分不支持的动画机型\n2. 增加了设置页面\n3. 优化了添加技能页面技能点的计算方式</string>
 </resources>

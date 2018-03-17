@@ -27,11 +27,15 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.GameActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.IntroduceActivity"
+        <activity
+            android:name=".activities.IntroduceActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
@@ -49,6 +53,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".activities.SettingsActivity"/>
     </application>
 
 </manifest>

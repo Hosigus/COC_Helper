@@ -32,6 +32,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_fab_game"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/dp_8"
+            android:visibility="gone"
+            app:backgroundTint="@drawable/fab_ripple" />
 
         <com.hosigus.coc_helper.views.FoldFabGroup
             android:id="@+id/ffg_main"
