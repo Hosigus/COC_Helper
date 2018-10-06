@@ -2,7 +2,7 @@
 
 ![COC跑团助手](https://github.com/Hosigus/COC_Helper/blob/master/readmeFiles/icon.png)
 
-
+> 2018.10.6 因为没有灵感，放弃了继续更新/重制，鸽了这么久之后确切的完全的鸽没了。另外，原意的安利也换了形式，同样成功安利了，感觉面团和手机冲突了，桌游果然还是要靠纸和笔才行。
 
 > 本文更新于2018.3.13。[最新版](http://coc.api.hosigus.tech/COC_Helper.apk)为alpha 1.4
 
